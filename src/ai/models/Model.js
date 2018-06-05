@@ -23,7 +23,7 @@ export default class Model {
     );
   }
 
-  fit(inputXs, inputYs, iterationCount = 100) {
+  fit(inputXs, inputYs, iterationCount = 10) {
     for (let i = 0; i < iterationCount; i += 1) {
       this.train(inputXs, inputYs);
     }

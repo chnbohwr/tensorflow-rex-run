@@ -36,6 +36,7 @@ function handleReset({ tRexes }) {
     // Train the model before restarting.
     console.info('Training');
     tRexes.forEach(tRex => {
+      console.log(tRex.training);
       tRex.model.fit(tRex.training.inputs, tRex.training.labels);
     });
   }
@@ -65,10 +66,11 @@ function handleRunning({ tRex, state }) {
 function handleCrash({ tRex }) {
   let label = null;
   const input = convertStateToVector(tRex.lastJumpingState);
-  // PTERODACTYL
+  // PTERODACTYL should ducking
   if (input[3] === 1) {
     label = [0, 0, 1]
-  } else if (tRex.jumping) {
+  //
+  } else if (tRex.jumping && input[0] > 1) {
     label = [1, 0, 0];
   } else {
     label = [0, 1, 0];
@@ -81,10 +83,10 @@ function handleCrash({ tRex }) {
 function convertStateToVector(state) {
   if (state) {
     return [
-      state.obstacleX / CANVAS_WIDTH,
-      state.obstacleWidth / CANVAS_WIDTH,
-      state.speed / 100,
-      state.obstacleY === 50 ? 1 : 0,
+      (state.obstacleX / CANVAS_WIDTH) * 5,
+      (state.obstacleWidth / CANVAS_WIDTH) * 5,
+      state.speed / 5,
+      state.obstacleY === 50 ? 5 : 0,
     ];
   }
   return [0, 0, 0, 0];

@@ -14,7 +14,7 @@ export default class NNModel extends Model {
     inputSize = 4,
     hiddenLayerSize = inputSize * 2,
     outputSize = 3,
-    learningRate = 0.07
+    learningRate = 0.04
   } = {}) {
     super();
     this.hiddenLayerSize = hiddenLayerSize;
