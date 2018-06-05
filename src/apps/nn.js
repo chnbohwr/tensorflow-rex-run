@@ -67,11 +67,11 @@ function handleCrash({ tRex }) {
   let label = null;
   const input = convertStateToVector(tRex.lastJumpingState);
   // PTERODACTYL should ducking
-  if (input[3] === 1) {
+  if (input[3] >= 1) {
     label = [0, 0, 1]
-  //
+    // prevent fall down collision
   } else if (tRex.jumping && input[0] > 1) {
-    label = [1, 0, 0];
+    label = [0, 0, 1];
   } else {
     label = [0, 1, 0];
   }

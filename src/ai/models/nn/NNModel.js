@@ -14,14 +14,14 @@ export default class NNModel extends Model {
     inputSize = 4,
     hiddenLayerSize = inputSize * 2,
     outputSize = 3,
-    learningRate = 0.04
+    learningRate = 0.1
   } = {}) {
     super();
     this.hiddenLayerSize = hiddenLayerSize;
     this.inputSize = inputSize;
     this.outputSize = outputSize;
     // Using ADAM optimizer
-    this.optimizer = tf.train.adam(learningRate);
+    this.optimizer = tf.train.adadelta(learningRate);
   }
 
   init() {
