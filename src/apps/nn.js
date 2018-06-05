@@ -22,19 +22,22 @@ function setup() {
 
 let firstTime = true;
 function handleReset({ tRexes }) {
-  const tRex = tRexes[0];
   if (firstTime) {
     firstTime = false;
-    tRex.model = new NNModel();
-    tRex.model.init();
-    tRex.training = {
-      inputs: [],
-      labels: []
-    };
+    tRexes.forEach(tRex => {
+      tRex.model = new NNModel();
+      tRex.model.init();
+      tRex.training = {
+        inputs: [],
+        labels: []
+      };
+    });
   } else {
     // Train the model before restarting.
     console.info('Training');
-    tRex.model.fit(tRex.training.inputs, tRex.training.labels);
+    tRexes.forEach(tRex => {
+      tRex.model.fit(tRex.training.inputs, tRex.training.labels);
+    });
   }
 }
 
@@ -44,11 +47,12 @@ function handleRunning({ tRex, state }) {
       let action = 0;
       const prediction = tRex.model.predictSingle(convertStateToVector(state));
       prediction.data().then((result) => {
-        if (result[1] > result[0]) {
+        tRex.lastJumpingState = state;
+        if ((result[1] > result[0]) && (result[1] > result[2])) {
+          // jump
           action = 1;
-          tRex.lastJumpingState = state;
-        } else {
-          tRex.lastRunningState = state;
+        } else if ((result[2] > result[0]) && (result[2] > result[1])) {
+          action = -1
         }
         resolve(action);
       });
@@ -59,17 +63,17 @@ function handleRunning({ tRex, state }) {
 }
 
 function handleCrash({ tRex }) {
-  let input = null;
   let label = null;
-  if (tRex.jumping) {
-    // Should not jump next time
-    input = convertStateToVector(tRex.lastJumpingState);
-    label = [1, 0];
+  const input = convertStateToVector(tRex.lastJumpingState);
+  // PTERODACTYL
+  if (input[3] === 1) {
+    label = [0, 0, 1]
+  } else if (tRex.jumping) {
+    label = [1, 0, 0];
   } else {
-    // Should jump next time
-    input = convertStateToVector(tRex.lastRunningState);
-    label = [0, 1];
+    label = [0, 1, 0];
   }
+
   tRex.training.inputs.push(input);
   tRex.training.labels.push(label);
 }
@@ -79,10 +83,11 @@ function convertStateToVector(state) {
     return [
       state.obstacleX / CANVAS_WIDTH,
       state.obstacleWidth / CANVAS_WIDTH,
-      state.speed / 100
+      state.speed / 100,
+      state.obstacleY === 50 ? 1 : 0,
     ];
   }
-  return [0, 0, 0];
+  return [0, 0, 0, 0];
 }
 
 document.addEventListener('DOMContentLoaded', setup);

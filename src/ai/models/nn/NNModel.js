@@ -11,10 +11,10 @@ export default class NNModel extends Model {
   biases = [];
 
   constructor({
-    inputSize = 3,
+    inputSize = 4,
     hiddenLayerSize = inputSize * 2,
-    outputSize = 2,
-    learningRate = 0.1
+    outputSize = 3,
+    learningRate = 0.07
   } = {}) {
     super();
     this.hiddenLayerSize = hiddenLayerSize;
