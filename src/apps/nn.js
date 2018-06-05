@@ -71,7 +71,7 @@ function handleCrash({ tRex }) {
     label = [0, 0, 1]
     // prevent fall down collision
   } else if (tRex.jumping && input[0] > 1) {
-    label = [0, 0, 1];
+    label = [1, 0, 0];
   } else {
     label = [0, 1, 0];
   }

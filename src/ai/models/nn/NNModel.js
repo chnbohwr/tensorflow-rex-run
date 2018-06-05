@@ -21,7 +21,7 @@ export default class NNModel extends Model {
     this.inputSize = inputSize;
     this.outputSize = outputSize;
     // Using ADAM optimizer
-    this.optimizer = tf.train.adadelta(learningRate);
+    this.optimizer = tf.train.adam(learningRate);
   }
 
   init() {
